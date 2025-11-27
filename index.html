@@ -227,17 +227,24 @@
 
                         <button type="submit" class="btn primary full-width">Gửi tin nhắn</button>
                     </form>
-                    <!-- Popup thông báo
                     <div id="form-popup" class="popup hidden">
                         <div class="popup-inner">
-                            <p class="popup-message">Cảm ơn bạn! Mình đã nhận được tin nhắn của bạn 🎉</p>
-                            <button type="button" class="btn primary" id="popup-close">
-                                Đóng
-                            </button>
-                        </div> -->
+                            <p class="popup-message">Tin nhắn đã được gửi!</p>
+                            <button type="button" class="btn primary" id="popup-close">Đóng</button>
+                        </div>
                     </div>
+
+                    <!-- POPUP THÔNG BÁO -->
+                    <div id="form-popup" class="popup hidden">
+                        <div class="popup-inner">
+                            <p class="popup-message">Cảm ơn bạn! Tin nhắn đã được gửi 🎉</p>
+                            <button type="button" class="btn primary" id="popup-close">Đóng</button>
+                        </div>
+                    </div>
+
                 </div>
             </div>
+        </div>
         </div>
     </section>
 
@@ -286,6 +293,73 @@
             }
         }, 1800);
     </script>
+    <script>
+        const contactForm = document.querySelector(".contact-form");
+        const popup = document.getElementById("form-popup");
+        const popupInner = popup.querySelector(".popup-inner");
+        const popupMessage = popup.querySelector(".popup-message");
+        const popupClose = document.getElementById("popup-close");
+
+        if (contactForm) {
+            contactForm.addEventListener("submit", async (e) => {
+                e.preventDefault();
+
+                const formData = new FormData(contactForm);
+
+                try {
+                    const response = await fetch(contactForm.action, {
+                        method: "POST",
+                        body: formData,
+                        headers: { Accept: "application/json" },
+                    });
+
+                    if (response.ok) {
+                        contactForm.reset();
+                        popupMessage.textContent = "Cảm ơn bạn! Mình đã nhận được tin nhắn 🎉";
+                        popupMessage.classList.remove("error");
+                        popupMessage.classList.add("success");
+                        popupInner.classList.remove("error");
+                        popupInner.classList.add("success");
+
+                        popup.classList.remove("hidden");
+
+                        setTimeout(() => {
+                            popup.classList.add("hidden");
+                        }, 5000);
+                    } else {
+                        popupMessage.textContent = "Có lỗi xảy ra, vui lòng thử lại 🙏";
+                        popupMessage.classList.remove("success");
+                        popupMessage.classList.add("error");
+                        popupInner.classList.remove("success");
+                        popupInner.classList.add("error");
+
+                        popup.classList.remove("hidden");
+
+                        setTimeout(() => {
+                            popup.classList.add("hidden");
+                        }, 5000);
+                    }
+                } catch (error) {
+                    popupMessage.textContent = "Không gửi được do lỗi mạng!";
+                    popupMessage.classList.remove("success");
+                    popupMessage.classList.add("error");
+                    popupInner.classList.remove("success");
+                    popupInner.classList.add("error");
+
+                    popup.classList.remove("hidden");
+
+                    setTimeout(() => {
+                        popup.classList.add("hidden");
+                    }, 5000);
+                }
+            });
+        }
+
+        popupClose.addEventListener("click", () => {
+            popup.classList.add("hidden");
+        });
+    </script>
+
 
 
 </body>
