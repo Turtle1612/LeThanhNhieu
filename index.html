@@ -361,6 +361,68 @@
     </script>
 
 
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Web có nhạc nền</title>
+
+  <style>
+    #music-toggle {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      padding: 8px 14px;
+      border-radius: 20px;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      background: #222;
+      color: #fff;
+      z-index: 9999;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nhạc nền -->
+  <audio id="bg-music" autoplay loop>
+    <source src="Ngtanoise.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Nút bật/tắt -->
+  <button id="music-toggle">🔊</button>
+
+  <script>
+    const audio = document.getElementById('bg-music');
+    const btn   = document.getElementById('music-toggle');
+
+    let isPlaying = true;
+
+    // Một số trình duyệt chặn autoplay, nên thử play lại khi user chạm vào trang
+    document.addEventListener("click", () => {
+      if (audio.paused && isPlaying) {
+        audio.play().catch(() => {});
+      }
+    }, { once: true });
+
+    btn.addEventListener('click', () => {
+      if (isPlaying) {
+        audio.pause();
+        isPlaying = false;
+        btn.textContent = '🔈';
+      } else {
+        audio.play().catch(() => {});
+        isPlaying = true;
+        btn.textContent = '🔊';
+      }
+    });
+  </script>
+
+</body>
+</html>
+
 
 </body>
 
